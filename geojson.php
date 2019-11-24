@@ -4,6 +4,7 @@ ini_set('memory_limit', '1024M');
 
 $sparqlQueryString = "
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX bag: <http://bag.basisregistraties.overheid.nl/def/bag#>
 SELECT DISTINCT ?item ?typeofLabel ?itemLabel ?status ?monnr ?bagid ?coords ?wkt WHERE { 
     ?item wdt:P359 ?monnr .
     ?item wdt:P131 wd:" . $qgemeente . " .
@@ -19,7 +20,10 @@ SELECT DISTINCT ?item ?typeofLabel ?itemLabel ?status ?monnr ?bagid ?coords ?wkt
       ?item wdt:P5208 ?bagid .
       BIND(uri(CONCAT('http://bag.basisregistraties.overheid.nl/bag/id/pand/',?bagid)) AS ?baguri) .
       SERVICE <https://data.pdok.nl/sparql> {
-        ?baguri geo:hasGeometry/geo:asWKT ?wkt .
+        graph ?pandVoorkomen {
+          ?baguri geo:hasGeometry/geo:asWKT ?wkt .
+        }
+        filter not exists { ?pandVoorkomen bag:eindGeldigheid [] } 
       }
     }
 }limit 20000
