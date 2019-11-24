@@ -57,6 +57,8 @@ include("options.php");
     </select>
     <button>go</button>
   </form>
+
+  <p>meer info en code op <a target="_blank" href="https://github.com/mmmenno/rijksmonumenten-bag">GitHub</a></p>
 </div>
 
 <script>
