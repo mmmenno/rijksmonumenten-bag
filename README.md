@@ -11,4 +11,5 @@ De eerste keer dat een gemeente bekeken wordt, wordt op de achtergrond een SPARQ
 ## install
 
 - git clone this repository
-- 
+- PHP must have permission to write geojsonfiles in the `geojson` folder
+
