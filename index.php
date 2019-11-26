@@ -40,7 +40,7 @@ include("options.php");
 
 
 <div id="legenda">
-  <h1>Rijksmonumenten, als op Wikidata</h1>
+  <h1>Rijksmonumenten op Wikidata</h1>
   <div class="nobag"></div> monument zonder BAGid ('gebouw' of 'huis')<br />
   <div class="nobagok"></div> monument zonder BAGid, misschien terecht <br />
   <div class="bag"></div> monument met BAGid <br />
