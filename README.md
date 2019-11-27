@@ -24,7 +24,7 @@ Het is zeker niet zo dat elk rijksmonument aan één BAG id te koppelen is:
 - Meerdere rijksmonumenten kunnen in één BAG pand liggen (De [Bakenesserkerk](https://www.wikidata.org/wiki/Q2215629) en de bijbehorende [kosterswoning](https://www.wikidata.org/wiki/Q17254952) delen hetzelfde BAG pand)
 - Een rijksmonument kan ook een hek, parkaanleg, tuinkoepel, brug, etc. zijn en beschikt dan logischerwijs niet over een BAG pand id.
 
-[Rotterdam, nog een hoop te doen](rotterdam.png)
+![Rotterdam, nog een hoop te doen](rotterdam.png)
 
 _In Rotterdam zijn nog nauwelijks rijksmonumenten met de BAG verbonden_
 
