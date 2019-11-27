@@ -58,10 +58,10 @@ $beenthere = array();
 foreach ($data['results']['bindings'] as $k => $v) {
 
 	// we don't want multiple features of one wikidata item, just because it has multiple 'types'
-	if(in_array($v['item']['value'],$beenthere)){
+	if(in_array($v['item']['value'] . "-" . $v['bagid']['value'],$beenthere)){
 		continue;
 	}
-	$beenthere[] = $v['item']['value'];
+	$beenthere[] = $v['item']['value'] . "-" . $v['bagid']['value'];
 
 
 	$monument = array("type"=>"Feature");
