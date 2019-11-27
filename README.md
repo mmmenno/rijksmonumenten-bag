@@ -1,6 +1,6 @@
 # Rijksmonumenten / BAG
 
-Deze kaartapplicatie toont rijksmonumenten, per gemeente. De data wordt betrokken van Wikidata. Als bij een monument een [BAG-pand-id](https://www.wikidata.org/wiki/Property:P5208) is vermeld, wordt uit de BAG de bijbehorende polygoon opgehaald.
+Deze kaartapplicatie toont rijksmonumenten, per gemeente. De data wordt betrokken van Wikidata. Als bij een monument een [BAG-pand-id](https://www.wikidata.org/wiki/Property:P5208) is vermeld, wordt uit de BAG de bijbehorende polygoon opgehaald. De (eerste versie van) de kaart is gemaakt op de [Wikidata Techstorm 2019](https://www.wikimedia.nl/projectpagina/wiki-techstorm).
 
 Bekijk de kaart op [https://hicsuntleones.nl/monumenten](https://hicsuntleones.nl/monumenten).
 
