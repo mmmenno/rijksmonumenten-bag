@@ -4,7 +4,7 @@ Deze kaartapplicatie toont rijksmonumenten, per gemeente. De data wordt betrokke
 
 Doel van de applicatie is tonen welke monumenten op Wikidata al voorzien zijn van een BAG-pand-id (dit is op het moment van schrijven alleen in Noord-Holland op enige schaal het geval) en welke monumenten onderdeel zijn van een complex. De kaart laat goed zien waar de data nog beter kan, en is dus een prima startpunt om Wikidata te editen - linkjes in de legenda brengen je snel naar zowel Wikidata item als monumentenregister als BAG pand item.
 
-![monumenten in Haarlem](haarlem.png)
+![monumenten in Amsterdam](amsterdam.png)
 
 De eerste keer dat een gemeente bekeken wordt, wordt op de achtergrond een SPARQL query gedraaid en van de resultaten een geojsonbestand gemaakt en opgeslagen. Een volgende keer dat die gemeente bekeken wordt, wordt het opgeslagen geojsonbestand gebruikt. Wil je een bestaand geojsonbestand vervangen dan kan je dat forceren door `&uncache=true` aan de url toe te voegen.
 
