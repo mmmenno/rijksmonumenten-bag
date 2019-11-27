@@ -26,7 +26,8 @@ SELECT DISTINCT ?item ?typeofLabel ?itemLabel ?status ?monnr ?bagid ?coords ?wkt
         filter not exists { ?pandVoorkomen bag:eindGeldigheid [] } 
       }
     }
-}limit 20000
+}
+LIMIT 20000
 ";
 
 $endpointUrl = 'https://query.wikidata.org/sparql';
@@ -52,7 +53,17 @@ $data = json_decode($response, true);
 
 $fc = array("type"=>"FeatureCollection", "features"=>array());
 
+$beenthere = array();
+
 foreach ($data['results']['bindings'] as $k => $v) {
+
+	// we don't want multiple features of one wikidata item, just because it has multiple 'types'
+	if(in_array($v['item']['value'],$beenthere)){
+		continue;
+	}
+	$beenthere[] = $v['item']['value'];
+
+
 	$monument = array("type"=>"Feature");
 	$props = array(
 		"wdid" => $v['item']['value'],
