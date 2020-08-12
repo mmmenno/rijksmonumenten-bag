@@ -5,7 +5,7 @@ ini_set('memory_limit', '1024M');
 $sparqlQueryString = "
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX bag: <http://bag.basisregistraties.overheid.nl/def/bag#>
-SELECT DISTINCT ?item ?typeofLabel ?itemLabel ?status ?monnr ?bagid ?coords ?wkt WHERE { 
+SELECT DISTINCT ?item ?typeofLabel ?itemLabel ?status ?monnr ?bagid ?coords WHERE { 
     ?item wdt:P359 ?monnr .
     ?item wdt:P131 wd:" . $qgemeente . " .
     ?item wdt:P31 ?typeof .
@@ -18,16 +18,9 @@ SELECT DISTINCT ?item ?typeofLabel ?itemLabel ?status ?monnr ?bagid ?coords ?wkt
     SERVICE wikibase:label { bd:serviceParam wikibase:language \"nl\". }
     OPTIONAL{
       ?item wdt:P5208 ?bagid .
-      BIND(uri(CONCAT('http://bag.basisregistraties.overheid.nl/bag/id/pand/',?bagid)) AS ?baguri) .
-      SERVICE <https://data.pdok.nl/sparql> {
-        graph ?pandVoorkomen {
-          ?baguri geo:hasGeometry/geo:asWKT ?wkt .
-        }
-        filter not exists { ?pandVoorkomen bag:eindGeldigheid [] } 
-      }
     }
 }
-LIMIT 20000
+LIMIT 2000
 ";
 
 $endpointUrl = 'https://query.wikidata.org/sparql';
@@ -49,7 +42,68 @@ curl_close ($ch);
 $data = json_decode($response, true);
 
 
-//print_r($data);
+
+// QUERY BAG APART
+
+$sparqlQueryString = "
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX bag: <http://bag.basisregistraties.overheid.nl/def/bag#>
+PREFIX pand: <http://bag.basisregistraties.overheid.nl/bag/id/pand/>
+SELECT DISTINCT ?baguri ?wkt WHERE { 
+    VALUES ?baguri { ";
+
+foreach ($data['results']['bindings'] as $k => $v) {
+	if(strlen($v['bagid']['value'])){
+		$sparqlQueryString .= "pand:" . $v['bagid']['value'] . " ";
+		$i++;
+	}
+}
+
+$sparqlQueryString .= "}
+    graph ?pandVoorkomen {
+      ?baguri geo:hasGeometry/geo:asWKT ?wkt .
+    }
+    filter not exists { ?pandVoorkomen bag:eindGeldigheid [] } 
+      
+}
+LIMIT 10000
+";
+
+unset($response);
+
+$endpointUrl = 'https://bag.basisregistraties.overheid.nl/sparql';
+//$url = $endpointUrl . '?query=' . urlencode($sparqlQueryString) . "&format=json";
+
+$curldata = "query=" . urlencode($sparqlQueryString);
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL,$endpointUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $curldata);
+curl_setopt($ch,CURLOPT_USERAGENT,'MonumentMap');
+$headers = [
+    'Accept: application/sparql-results+json'
+];
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec ($ch);
+curl_close ($ch);
+
+$bagdata = json_decode($response, true);
+
+$wkts = array();
+if(isset($bagdata['results']['bindings'])){
+	foreach ($bagdata['results']['bindings'] as $k => $v) {
+		$bagid = str_replace("http://bag.basisregistraties.overheid.nl/bag/id/pand/","",$v['baguri']['value']);
+		$wkts[$bagid] = $v['wkt']['value'];
+	}
+}else{
+	"no results from endpoint " . $endpointUrl;
+	die;
+}
+
+
 
 $fc = array("type"=>"FeatureCollection", "features"=>array());
 
@@ -77,8 +131,8 @@ foreach ($data['results']['bindings'] as $k => $v) {
 	}else{
 		$props['status'] = "m";
 	}
-	if(strlen($v['wkt']['value'])){
-		$monument['geometry'] = wkt2geojson($v['wkt']['value']);	
+	if(isset($wkts[$v['bagid']['value']])){
+		$monument['geometry'] = wkt2geojson($wkts[$v['bagid']['value']]);	
 	}else{
 		$coords = str_replace(array("Point(",")"), "", $v['coords']['value']);
 		$latlon = explode(" ", $coords);
